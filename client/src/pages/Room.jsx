@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useRoom } from "../context/RoomContext";
+import API_URL from "../utils/api";
 import MemberList from "../components/MemberList";
 import RoomsList from "../components/RoomsList";
 import TaskBoard from "../components/TaskBoard";
@@ -25,7 +26,7 @@ export default function Room() {
 
   const fetchRoomFiles = async (roomCode) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/upload/room/${roomCode}`);
+      const response = await fetch(`${API_URL}/api/upload/room/${roomCode}`);
       if (response.ok) {
         const files = await response.json();
         setRoomFiles(files);
@@ -37,7 +38,7 @@ export default function Room() {
 
   const fetchTasks = async (roomCode) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/tasks/room/${roomCode}`);
+      const response = await fetch(`${API_URL}/api/tasks/room/${roomCode}`);
       if (response.ok) {
         const tasks = await response.json();
         setTasks(tasks);
@@ -49,7 +50,7 @@ export default function Room() {
 
   const fetchMessages = async (roomCode) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/messages/room/${roomCode}`);
+      const response = await fetch(`${API_URL}/api/messages/room/${roomCode}`);
       if (response.ok) {
         const messages = await response.json();
         setMessages(messages);
@@ -65,7 +66,7 @@ export default function Room() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/rooms/leave', {
+      const response = await fetch(`${API_URL}/api/rooms/leave`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

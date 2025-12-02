@@ -5,6 +5,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import path from "path";
+import { fileURLToPath } from "url";
 import "colors"; // This enables .green, .red, .cyan etc.
 // Routes
 import roomRoutes from "./routes/roomRoutes.js";
@@ -16,11 +18,19 @@ import Room from "./models/Room.js";
 import Task from "./models/Task.js";
 dotenv.config();
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const httpServer = createServer(app);
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173", // Vite default port
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -28,15 +38,24 @@ const io = new Server(httpServer, {
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: allowedOrigins,
   credentials: true,
 }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Basic route
-app.get("/", (req, res) => {
-  res.json({ message: "CollabRoom API is running! 🚀" });
+// API routes
+app.use("/api/rooms", roomRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/upload", uploadRoutes);
+
+// Serve frontend
+app.use(express.static(path.join(__dirname, "../client/dist")));
+
+// Fallback to index.html for React routing
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
 
 // MongoDB Connection with async/await
@@ -114,12 +133,7 @@ io.on("connection", (socket) => {
 // Make io accessible globally (for use in controllers later)
 global.io = io;
 
-const PORT = process.env.PORT|| 3000;
-
-app.use("/api/rooms", roomRoutes);
-app.use("/api/tasks", taskRoutes);
-app.use("/api/messages", messageRoutes);
-app.use("/api/upload", uploadRoutes);
+const PORT = process.env.PORT || 3000;
 
 httpServer.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`.blue.bold);

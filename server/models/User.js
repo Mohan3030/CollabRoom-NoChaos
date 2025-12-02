@@ -11,13 +11,12 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       unique: true,
-      sparse: true, // Allows null but unique if exists
+      sparse: true, 
     },
     avatar: {
       type: String,
       default: "https://api.dicebear.com/7.x/avataaars/svg?seed=",
     },
-    // For guest users (no login), we'll use session-based temp auth later
   },
   { timestamps: true }
 );

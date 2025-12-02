@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: collabroom
+    runtime: node
+    plan: free
+    buildCommand: cd server && npm install && npm run build
+    startCommand: cd server && npm start
+    envVars:
+      - key: MONGO_URI
+        scope: run
+      - key: JWT_SECRET
+        scope: run
+      - key: CLOUDINARY_NAME
+        scope: run
+      - key: CLOUDINARY_API_KEY
+        scope: run
+      - key: CLOUDINARY_API_SECRET
+        scope: run
+      - key: PORT
+        value: 3000
+      - key: FRONTEND_URL
+        scope: run
