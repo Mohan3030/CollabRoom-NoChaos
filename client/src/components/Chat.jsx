@@ -1,6 +1,7 @@
 // src/components/Chat.jsx
 import { useState, useRef } from "react";
 import { useRoom } from "../context/RoomContext";
+import API_URL from "../utils/api";
 
 export default function Chat() {
   const { messages, roomFiles, user, room, socket } = useRoom();
@@ -12,7 +13,7 @@ export default function Chat() {
     if (!input.trim()) return;
     
     try {
-      const response = await fetch('http://localhost:3000/api/messages', {
+      const response = await fetch(`${API_URL}/api/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -46,7 +47,7 @@ export default function Chat() {
     formData.append('userName', user.name);
 
     try {
-      const response = await fetch('http://localhost:3000/api/upload', {
+      const response = await fetch(`${API_URL}/api/upload`, {
         method: 'POST',
         body: formData,
       });

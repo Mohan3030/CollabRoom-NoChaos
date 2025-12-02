@@ -1,6 +1,7 @@
 // src/components/TaskBoard.jsx
 import { useState } from "react";
 import { useRoom } from "../context/RoomContext";
+import API_URL from "../utils/api";
 import TaskModal from "./TaskModal";
 import TaskEditor from "./TaskEditor";
 
@@ -20,7 +21,7 @@ export default function TaskBoard() {
   const createTask = async () => {
     if (!newTitle.trim()) return;
     try {
-      const response = await fetch('http://localhost:3000/api/tasks/create', {
+      const response = await fetch(`${API_URL}/api/tasks/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -59,7 +60,7 @@ export default function TaskBoard() {
         updates.assignee = null;
       }
 
-      await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+      await fetch(`${API_URL}/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates)

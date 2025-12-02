@@ -4,6 +4,7 @@ import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Room from "./pages/Room";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import API_URL from "./utils/api";
 
 function Home() {
   const [mode, setMode] = useState("home"); // home | create | join
@@ -12,13 +13,11 @@ function Home() {
   const [roomCode, setRoomCode] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API = "http://localhost:3000/api/rooms";
-
   const createRoom = async () => {
     if (!roomName.trim() || !userName.trim()) return alert("Fill both fields");
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/create`, { roomName, userName });
+      const res = await axios.post(`${API_URL}/api/rooms/create`, { roomName, userName });
       const userData = {
         user: res.data.user,
         room: res.data.room,
@@ -37,7 +36,7 @@ function Home() {
     if (!roomCode.trim() || !userName.trim()) return alert("Fill both fields");
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/join`, {
+      const res = await axios.post(`${API_URL}/api/rooms/join`, {
         roomCode: roomCode.toUpperCase(),
         userName,
       });

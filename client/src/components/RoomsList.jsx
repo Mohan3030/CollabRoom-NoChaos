@@ -1,5 +1,6 @@
 // src/components/RoomsList.jsx
 import { useNavigate, useParams } from "react-router-dom";
+import API_URL from "../utils/api";
 
 export default function RoomsList() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ export default function RoomsList() {
 
   const handleRoomClick = async (roomCode) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/tasks/room/${roomCode}`);
+      const response = await fetch(`${API_URL}/api/tasks/room/${roomCode}`);
       if (response.ok) {
         // Update localStorage with new room
         const updatedData = {

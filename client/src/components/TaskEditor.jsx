@@ -1,6 +1,7 @@
 // src/components/TaskEditor.jsx
 import { useState, useEffect, useRef } from "react";
 import { useRoom } from "../context/RoomContext";
+import API_URL from "../utils/api";
 
 export default function TaskEditor({ isOpen, onClose, task }) {
   const { room, user, socket, taskMessages, setTaskMessages, taskFiles, setTaskFiles } = useRoom();
@@ -13,7 +14,7 @@ export default function TaskEditor({ isOpen, onClose, task }) {
 
   const fetchTaskMessages = async (taskId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/messages/task/${taskId}`);
+      const response = await fetch(`${API_URL}/api/messages/task/${taskId}`);
       if (response.ok) {
         const messages = await response.json();
         setTaskMessages(prev => ({ ...prev, [taskId]: messages }));
@@ -25,7 +26,7 @@ export default function TaskEditor({ isOpen, onClose, task }) {
 
   const fetchTaskFiles = async (taskId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/upload/task/${taskId}`);
+      const response = await fetch(`${API_URL}/api/upload/task/${taskId}`);
       if (response.ok) {
         const files = await response.json();
         setTaskFiles(prev => ({ ...prev, [taskId]: files }));
@@ -85,7 +86,7 @@ export default function TaskEditor({ isOpen, onClose, task }) {
 
   const saveTask = async () => {
     try {
-      await fetch(`http://localhost:3000/api/tasks/${task._id}`, {
+      await fetch(`${API_URL}/api/tasks/${task._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description: content })
@@ -98,7 +99,7 @@ export default function TaskEditor({ isOpen, onClose, task }) {
   const sendTaskMessage = async () => {
     if (!chatInput.trim()) return;
     try {
-      await fetch('http://localhost:3000/api/messages', {
+      await fetch(`${API_URL}/api/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roomCode: room.code, userId: user._id, content: chatInput, taskId: task._id })
@@ -122,7 +123,7 @@ export default function TaskEditor({ isOpen, onClose, task }) {
     formData.append('userName', user.name);
     formData.append('taskId', task._id);
     try {
-      const response = await fetch('http://localhost:3000/api/upload', { method: 'POST', body: formData });
+      const response = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
       if (response.ok) fileInputRef.current.value = '';
       else alert('Upload failed');
     } catch (error) {

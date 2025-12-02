@@ -1,6 +1,7 @@
 // src/components/TaskModal.jsx
 import { useState } from "react";
 import { useRoom } from "../context/RoomContext";
+import API_URL from "../utils/api";
 
 export default function TaskModal({ isOpen, onClose }) {
   const { room, members } = useRoom();
@@ -12,7 +13,7 @@ export default function TaskModal({ isOpen, onClose }) {
     if (!title.trim()) return;
     
     try {
-      const response = await fetch('http://localhost:3000/api/tasks/create', {
+      const response = await fetch(`${API_URL}/api/tasks/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
