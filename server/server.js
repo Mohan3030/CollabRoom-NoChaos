@@ -44,16 +44,16 @@ app.use(cors({
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, "../client/dist")));
+
 // API routes
 app.use("/api/rooms", roomRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/upload", uploadRoutes);
 
-// Serve frontend
-app.use(express.static(path.join(__dirname, "../client/dist")));
-
-// Fallback to index.html for React routing
+// Fallback to index.html for React routing (must be last)
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
