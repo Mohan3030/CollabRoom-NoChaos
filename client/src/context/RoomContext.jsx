@@ -28,7 +28,7 @@ export const RoomProvider = ({ children }) => {
     const { token } = JSON.parse(saved);
     isConnecting = true;
 
-    const socketUrl = import.meta.env.VITE_API_URL ";
+    const socketUrl = import.meta.env.VITE_API_URL ;
     socket = io(socketUrl, {
       withCredentials: true,
       transports: ["websocket"],
